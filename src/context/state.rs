@@ -29,6 +29,9 @@ pub struct GLState {
     /// Whether GL_POLYGON_OFFSET_FILL is enabled
     pub enabled_polygon_offset_fill: bool,
 
+    /// Whether GL_RASTERIZER_DISCARD is enabled
+    pub enabled_rasterizer_discard: bool,
+
     /// Whether GL_SAMPLE_ALPHA_TO_COVERAGE is enabled
     pub enabled_sample_alpha_to_coverage: bool,
 
@@ -136,6 +139,7 @@ impl GLState {
             enabled_dither: false,
             enabled_multisample: true,
             enabled_polygon_offset_fill: false,
+            enabled_rasterizer_discard: false,
             enabled_sample_alpha_to_coverage: false,
             enabled_sample_coverage: false,
             enabled_scissor_test: false,

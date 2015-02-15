@@ -641,6 +641,15 @@ pub struct DrawParameters {
     /// This is different from a viewport. The image will stretch to fill the viewport, but
     /// not the scissor box.
     pub scissor: Option<Rect>,
+
+    /// If `false`, the pipeline will stop after the primitives generation stage. The default
+    /// value is `true`.
+    ///
+    /// If `false`, the fragment shader of your program won't be executed.
+    ///
+    /// This parameter may seem pointless, but it can be useful when you use transform
+    /// feedback or if you just want your shaders to write to a buffer.
+    pub draw_primitives: bool,
 }
 
 impl Default for DrawParameters {
@@ -656,6 +665,7 @@ impl Default for DrawParameters {
             dithering: true,
             viewport: None,
             scissor: None,
+            draw_primitives: true,
         }
     }
 }
@@ -909,6 +919,19 @@ impl DrawParameters {
                 if ctxt.state.enabled_scissor_test {
                     ctxt.gl.Disable(gl::SCISSOR_TEST);
                     ctxt.state.enabled_scissor_test = false;
+                }
+            }
+        }
+
+        // draw_primitives
+        {
+            if ctxt.state.enabled_rasterizer_discard == self.draw_primitives {
+                if self.draw_primitives {
+                    unsafe { ctxt.gl.Disable(gl::RASTERIZER_DISCARD); }
+                    ctxt.state.enabled_rasterizer_discard = false;
+                } else {
+                    unsafe { ctxt.gl.Enable(gl::RASTERIZER_DISCARD); }
+                    ctxt.state.enabled_rasterizer_discard = true;
                 }
             }
         }
